@@ -11,7 +11,7 @@ const works = [
       imgSrc: '/Manideep - Portfolio Images/images/offline-gpt.jpg',
       title: 'Off Gpt',
       tags: ['GPT', 'LLM', 'Development'],
-      projectLink: 'https://colab.research.google.com/drive/1rRQ1nHi0IPS4Iz0OMIGWHkPdIAULwUIm?usp=sharing'
+      projectLink: 'https://colab.research.google.com/drive/1jlzeIzqkwybWydIxR9EETQqbk5f9nA2p?usp=sharing'
     },
     {
       imgSrc: '/Manideep - Portfolio Images/images/travel-planner.png',
@@ -24,6 +24,12 @@ const works = [
       title: 'Pix Compressor',
       tags: ['Web Tools', 'JS'],
       projectLink: 'https://github.com/ManideepVerse/Pix-Compressor'
+    },
+    {
+      imgSrc: '/Manideep - Portfolio Images/images/Qimage.png',
+      title: 'Qmaster',
+      tags: ['REST API', 'React.js'],
+      projectLink: 'https://github.com/ManideepVerse/Qmaster'
     },
     {
       imgSrc: '/Manideep - Portfolio Images/images/Heart-Disease-Prediction-img.png',
