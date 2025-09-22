@@ -44,7 +44,7 @@ const Hero = () => {
                     <ButtonPrimary 
                         label="Download CV"
                         icon=""
-                        href= "/resumes/Manideep_D_Resume.pdf"
+                        href= "/resumes/Mani_Resume_New_1.pdf"
                         download = {true}
                         target = "_blank"
                     />
