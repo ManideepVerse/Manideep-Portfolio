@@ -1,4 +1,3 @@
-import React from 'react'
 
 /**
  * Node modules
@@ -11,43 +10,46 @@ import { useState } from 'react';
  */
 
 import Navbar from './Navbar';
+import Icon from './Icon';
 
 const Header = () => {
   const [navOpen, setNavopen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full h-20 flex items-center z-40 bg-gradient-to-b from-zinc-900 to-zinc-900/0">
-        <div className="max-w-screen-2xl w-full mx-auto px-4 flex justify-between items-center md:px-6 md:grid md:grid-cols-[1fr,3fr,1fr]">
-            <h1>
-                <a 
-                    href="/" 
-                    className="logo"
-                >
-                    <img 
-                        src="Manideep - Portfolio Images/images/logo.svg" 
-                        width= {40}
-                        height= {40}
-                        alt="Manideep" 
-                    />
-                </a>
-            </h1>
-            
+    <header className="fixed top-0 left-0 w-full px-4 pt-4 z-40">
+        <div className="max-w-6xl h-14 mx-auto pl-4 pr-2 flex justify-between items-center bg-background/70 border border-line rounded-full backdrop-blur-md md:grid md:grid-cols-[1fr,auto,1fr]">
+            <a
+                href="/"
+                className="logo flex items-center gap-3 max-w-max"
+            >
+                <img
+                    src="/Manideep - Portfolio Images/images/logo.svg"
+                    width= {28}
+                    height= {28}
+                    alt=""
+                />
+
+                <span className="sr-only">
+                    Manideep D.
+                </span>
+            </a>
+
             <div className="relative md:justify-self-center">
-                <button 
-                    className="menu-btn md:hidden" 
+                <button
+                    className="menu-btn md:hidden"
+                    aria-label={navOpen ? 'Close menu' : 'Open menu'}
+                    aria-expanded={navOpen}
                     onClick={() => setNavopen((prev) => !prev)}
                 >
-                    <span className="material-symbols-rounded">
-                        {navOpen ? 'close' : 'menu'} 
-                    </span>
+                    <Icon name={navOpen ? 'close' : 'menu'} />
                 </button>
 
-                <Navbar navOpen={navOpen}/>
+                <Navbar navOpen={navOpen} closeNav={() => setNavopen(false)}/>
 
             </div>
 
-            <a 
-                href="#contact" 
+            <a
+                href="#contact"
                 className="btn btn-secondary max-md:hidden md:justify-self-end"
             >
                 Contact Me

@@ -1,5 +1,14 @@
-import React from 'react'
 
+
+/**
+ * Node modules
+ */
+import { useEffect, useRef, useState } from 'react';
+
+/**
+ * Components
+ */
+import ChapterMark from './ChapterMark';
 
 const socialLinks = [
     {
@@ -33,114 +42,210 @@ const socialLinks = [
 ];
 
 
+const statusText = {
+    sent: 'Message sent. Thank you!',
+    error: 'Could not send the message. Please try again.',
+    maintenance: 'Under maintenance.'
+};
+
+// How long each notice stays on screen, in milliseconds
+const statusDuration = { sent: 5000, error: 20000, maintenance: 10000 };
+
+// After this many failed sends in a row the form points to email instead
+const MAX_FAILURES = 4;
+
 const Contact = () => {
+  // An object, so repeating the same notice still restarts its timer
+  const [status, setStatus] = useState({ type: 'idle' });
+  const failures = useRef(0);
+
+  useEffect(() => {
+    const duration = statusDuration[status.type];
+    if (!duration) return;
+
+    const timer = setTimeout(() => setStatus({ type: 'idle' }), duration);
+    return () => clearTimeout(timer);
+  }, [status]);
+
+  // Optimistic send: confirm and clear the form at once, deliver in the background,
+  // and put the visitor's text back if delivery fails. keepalive lets the request finish
+  // even if they leave the page. Without JavaScript the form posts through its action.
+  const sendMessage = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const body = new FormData(form);
+
+    form.reset();
+    setStatus({ type: 'sent' });
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body,
+        headers: { Accept: 'application/json' },
+        keepalive: true
+      });
+
+      if (!response.ok) throw new Error('Getform responded with ' + response.status);
+
+      failures.current = 0;
+    } catch {
+      body.forEach((value, name) => { form.elements[name].value = value; });
+      failures.current += 1;
+      setStatus({ type: failures.current >= MAX_FAILURES ? 'maintenance' : 'error' });
+    }
+  };
+
   return (
     <section 
         id="contact"
         className="section"
     >
-        <div className="container lg:grid lg:grid-cols-2 lg:items-stretch">
+        <div className="container">
 
-            <div className="mb-12 lg:mb-0 lg:flex lg:flex-col">
+            <ChapterMark number="06" title="The Next Chapter" />
 
-                <h2 className="headline-2 lg:max-w-[12ch] reveal-up">
-                    Contact me for collaboration
+            <div className="reveal">
+                <p className="eyebrow">Contact</p>
+
+                <h2 className="headline-1 mt-5 max-w-[16ch]">
+                    Have an ambitious idea? <span className="text-accent">Let&apos;s engineer it.</span>
                 </h2>
-
-                <p className="text-zinc-400 mt-3 mb-8 max-w-[50ch] lg:max-w-[30ch] reveal-up">
-                    Reach out today to discuss your project needs and start collaborating on something amazing!
-                </p>
-
-                <div className="flex items-center gap-2 mt-auto">
-                    {socialLinks.map(({ href, icon }, key) => (
-                        <a
-                            key={key}
-                            href={href}
-                            target="_blank"
-                            className="w-12 h-12 grid place-items-center ring-inset ring-2 ring-zinc-50/5 rounded-lg transition-[background-color,color] hover:bg-zinc-50 hover:text-zinc-950 active:bg-zinc-50/80 reveal-up"
-                        >
-                            {icon}
-                        </a>
-                    ))}
-                </div>
             </div>
 
-            <form 
+            <div className="grid gap-14 mt-12 lg:grid-cols-12 lg:gap-10 lg:mt-16">
+
+                <div className="lg:col-span-5 reveal">
+
+                    <p className="text-lg text-muted max-w-[40ch]">
+                        Reach out to discuss an AI product, an agentic workflow or a system that needs building.
+                    </p>
+
+                    <div className="flex items-center gap-2 mt-10">
+                        {socialLinks.map(({ href, icon, alt }, key) => (
+                            <a
+                                key={key}
+                                href={href}
+                                aria-label={alt}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-12 h-12 grid place-items-center border border-line rounded-full transition-colors hover:bg-accent hover:text-background hover:border-accent active:bg-cyan-500"
+                            >
+                                {icon}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="stage p-6 md:p-10 lg:col-span-6 lg:col-start-7 reveal">
+                    <p className="eyebrow">Send a message</p>
+
+                    <form 
                 action="https://getform.io/f/ajjjvgna"
                 method="POST" 
-                className="xl:pl-10 2xl:pl-20"
+                onSubmit={sendMessage}
+                className="mt-6"
             >
+                {/* Getform honeypot: bots fill it, people never see it */}
+                <input type="hidden" name="_gotcha" />
 
-                <div classsName="md:grid md:items-center md:grid-cols-2 md:gap-2">
-                    <div className="mb-4">
+                <div className="md:grid md:items-center md:grid-cols-2 md:gap-6">
+                    <div className="mb-6">
                         <label 
                             htmlFor="name" 
-                            className="label reveal-up"
+                            className="label"
                         >
                             Name
                         </label>
 
                         <input 
                             type="text" 
+                            maxLength={100}
                             name="name" 
                             id="name"
                             autoComplete="name" 
                             required
                             placeholder="Enter your name"
-                            className="text-field reveal-up" 
-                            pattern="[A-Za-z\s]+" 
-                            title="Name can only contain letters and spaces."
+                            className="text-field"
                         />
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-6">
                         <label 
                             htmlFor="email" 
-                            className="label reveal-up"
+                            className="label"
                         >
                             Email
                         </label>
 
                         <input 
                             type="email" 
+                            maxLength={254}
                             name="email" 
                             id="email"
                             autoComplete="email" 
                             required
                             placeholder="example@gmail.com"
-                            className="text-field reveal-up" 
+                            className="text-field" 
                         />
                     </div>
                 </div>
 
 
-                <div className="mb-4">
+                <div className="mb-6">
                     <label 
                         htmlFor="message" 
-                        classsName="label reveal-up"
+                        className="label"
                     >
                         Message
                     </label>
 
                     <textarea 
+                        maxLength={5000}
                         name="message" 
                         id="message" 
                         placeholder="Hi!"
                         required
-                        className="text-field resize-y min-h-32 max-h-80 reveal-up"
+                        className="text-field resize-y min-h-32 max-h-80"
                     ></textarea>
                 </div>
 
 
                 <button 
                     type="submit" 
-                    className="btn btn-primary [&]:max-w-full w-full justify-center reveal-up"
+                    className="btn btn-primary [&]:max-w-full w-full justify-center mt-2"
                 >
-                    Submit
+                    Send message
                 </button>
+
+                <p
+                    role="status"
+                    className={'mt-4 text-sm ' + (status.type === 'sent' ? 'text-emerald-400' : 'text-red-400')}
+                >
+                    {statusText[status.type]}
+
+                    {status.type === 'maintenance' &&
+                        <>
+                            {' '}Please email{' '}
+
+                            <a
+                                href="mailto:dmd23604@gmail.com"
+                                className="text-foreground underline underline-offset-4 hover:text-accent"
+                            >
+                                dmd23604@gmail.com
+                            </a>
+                        </>
+                    }
+                </p>
             </form>
+                </div>
+
+            </div>
 
         </div>
+
+        {/* Closing scene: the grid runs out to a horizon before the footer */}
+        <div className="horizon" aria-hidden="true"></div>
     </section>
   )
 }

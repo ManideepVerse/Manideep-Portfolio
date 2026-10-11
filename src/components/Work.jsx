@@ -1,74 +1,101 @@
-import React from 'react'
 
 
 /**
  * Components
  */
 import ProjectCard from './ProjectCard';
+import CareConnectPreview from './CareConnectPreview';
+import QmasterPreview from './QmasterPreview';
+import PlanItPalPreview from './PlanItPalPreview';
+import ChapterMark from './ChapterMark';
 
-const works = [
+// Stack and features are checked against each repository; no outcomes or metrics added.
+const featured = [
     {
-      imgSrc: '/Manideep - Portfolio Images/images/offline-gpt.jpg',
-      title: 'Off Gpt',
-      tags: ['GPT', 'LLM', 'Development'],
-      projectLink: 'https://colab.research.google.com/drive/1jlzeIzqkwybWydIxR9EETQqbk5f9nA2p?usp=sharing'
+      id: 'careconnect',
+      title: 'CareConnect',
+      category: 'AI healthcare assistant',
+      desc: 'A healthcare booking assistant with document Q&A. A Gemini-powered chat collects appointment details over several turns and confirms by email, while a retrieval pipeline answers questions about uploaded PDFs.',
+      features: [
+        'Conversational booking with multi-turn slot filling',
+        'Automated email confirmations over SMTP',
+        'PDF question answering with TF-IDF retrieval (RAG)',
+        'Supabase-backed admin dashboard with search, filters, CRUD and CSV export'
+      ],
+      tags: ['Python', 'Streamlit', 'Google Gemini API', 'LangChain', 'RAG', 'TF-IDF', 'Supabase', 'SMTP'],
+      projectLink: 'https://github.com/ManideepVerse/CareConnect',
+      preview: <CareConnectPreview />,
+      tone: '#22D3EE',
+      lead: true
     },
     {
-      imgSrc: '/Manideep - Portfolio Images/images/travel-planner.png',
-      title: 'Trip Scout - Travel Planner',
-      tags: ['Javascript', 'Web Development'],
-      projectLink: 'https://github.com/ManideepVerse/Plan-It-Pal'
-    },
-    {
-      imgSrc: '/Manideep - Portfolio Images/images/image-compressor.png',
-      title: 'Pix Compressor',
-      tags: ['Web Tools', 'JS'],
-      projectLink: 'https://github.com/ManideepVerse/Pix-Compressor'
-    },
-    {
-      imgSrc: '/Manideep - Portfolio Images/images/Qimage.png',
+      id: 'qmaster',
       title: 'Qmaster',
-      tags: ['REST API', 'React.js'],
-      projectLink: 'https://github.com/ManideepVerse/Qmaster'
+      category: 'Real-time queue management',
+      desc: 'A full-stack queue management system that keeps queue state in sync across web and mobile clients. FastAPI serves the REST API and Redis holds the live queue for low-latency updates.',
+      features: [
+        'Queue joining and status tracking from the mobile app',
+        'REST endpoints to join, check status, leave, serve and skip',
+        'React admin dashboard for serving and skipping tokens',
+        'Redis-backed queue state shared by web and mobile clients'
+      ],
+      tags: ['Python', 'FastAPI', 'Redis', 'REST APIs', 'React', 'React Native (Expo)', 'Render', 'Vercel'],
+      projectLink: 'https://github.com/ManideepVerse/Qmaster',
+      preview: <QmasterPreview />,
+      tone: '#A78BFA',
+      flip: true
     },
     {
-      imgSrc: '/Manideep - Portfolio Images/images/Heart-Disease-Prediction-img.png',
-      title: 'Cardio Vascular Disease Prediction System',
-      tags: ['Machine Learning', 'Predictive Healthcare'],
-      projectLink: 'https://github.com/ManideepVerse/Cardiovascular-Disease-Prediction'
-    },
-    {
-      imgSrc: '/Manideep - Portfolio Images/images/song-segment.png',
-      title: 'Spotify Songs Genre Segmentation',
-      tags: ['Machine Learning', 'Music Analysis'],
-      projectLink: 'https://github.com/ManideepVerse/Spotify-Songs-Genre-Segmentation'
+      id: 'plan-it-pal',
+      title: 'Plan It Pal',
+      category: 'AI travel planner',
+      desc: 'An AI travel planner built with React and the Google Gemini API. It generates personalised, day-wise itineraries with prices and ratings, and uses Google Maps to locate each venue.',
+      features: [
+        'Personalised, day-wise itinerary generation',
+        'Hotel and venue cards with pricing and ratings',
+        'Map links for venue locations',
+        'Destination search with trip length, budget and traveller filters'
+      ],
+      tags: ['React', 'JavaScript', 'Tailwind CSS', 'Google Gemini API', 'Google Maps API', 'Firebase', 'Vercel'],
+      projectLink: 'https://github.com/ManideepVerse/Plan-It-Pal',
+      preview: <PlanItPalPreview />,
+      tone: '#CBD5E1'
     },
 ];
 
 
+
 const Work = () => {
   return (
-    <section 
+    <section
         id="work"
         className="section"
     >
         <div className="container">
 
-            <h2 className="headline-2 mb-8 reveal-up">
-                My portfolio highlights
+            <ChapterMark number="03" title="From Ideas to Systems" />
 
-            </h2>
+            <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-12 reveal">
+                <div className="lg:col-span-8">
+                    <p className="eyebrow">Selected work</p>
 
+                    <h2 className="headline-1 mt-5">
+                        Projects that solve <span className="text-accent">real problems</span>
+                    </h2>
+                </div>
 
-            <div className="grid gap-x-4 gap-y-5 grid-cols-[repeat(auto-fill,_minmax(280px,_1fr))]">
-                {works.map(({ imgSrc, title, tags, projectLink }, key) => (
-                    <ProjectCard 
+                <p className="text-muted max-w-[44ch] lg:col-span-4 lg:pb-2">
+                    Three featured full-stack and AI projects: an LLM-powered healthcare assistant, a real-time queue system and an AI travel planner. Together they cover REST APIs, real-time data, LLM integration, retrieval and responsive React interfaces.
+                </p>
+            </div>
+
+            <div className="grid gap-28 mt-24 lg:gap-48 lg:mt-36">
+                {featured.map((project, key) => (
+                    <ProjectCard
                         key={key}
-                        imgSrc={imgSrc}
-                        title={title}
-                        tags={tags}
-                        projectLink={projectLink}
-                        classes= "reveal-up"
+                        {...project}
+                        index={'0' + (key + 1)}
+                        classes="reveal"
                     />
                 ))}
             </div>

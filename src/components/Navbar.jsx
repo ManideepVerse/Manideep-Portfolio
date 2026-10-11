@@ -1,4 +1,3 @@
-import React from 'react'
 
 /**
  * Node modules 
@@ -7,7 +6,7 @@ import React from 'react'
 import { useRef, useEffect } from 'react';
 import PropTypes from "prop-types";
 
-const Navbar = ({ navOpen }) => {
+const Navbar = ({ navOpen, closeNav }) => {
   const lastActiveLink = useRef();
   const activeBox = useRef();
 
@@ -21,36 +20,54 @@ const Navbar = ({ navOpen }) => {
       }
   };
 
+  const setActiveLink = (link) => {
+      lastActiveLink.current?.classList.remove('active');
+      link.classList.add('active');
+      lastActiveLink.current = link;
+
+      activeBox.current.style.top = link.offsetTop + 'px';
+      activeBox.current.style.left = link.offsetLeft + 'px';
+      activeBox.current.style.width = link.offsetWidth + 'px';
+      activeBox.current.style.height = link.offsetHeight + 'px';
+  };
+
   useEffect(() => {
+      // Activate the link of the last section whose top has passed the middle of the screen.
+      // Links hidden by CSS (Contact on desktop) are skipped.
+      const activeCurrentSection = () => {
+          const links = [...document.querySelectorAll('.nav-link')];
+          const current = links.findLast((link) => link.offsetParent &&
+              document.querySelector(link.hash)?.getBoundingClientRect().top <= window.innerHeight / 2);
+
+          if (current && current !== lastActiveLink.current) setActiveLink(current);
+      };
+
       initActiveBox();
+      activeCurrentSection();
       window.addEventListener('resize', initActiveBox);
+      window.addEventListener('scroll', activeCurrentSection, { passive: true });
 
       return () => {
           window.removeEventListener('resize', initActiveBox);
+          window.removeEventListener('scroll', activeCurrentSection);
       };
   }, []);
 
   const activeCurrentLink = (event) => {
-      lastActiveLink.current?.classList.remove('active');
-      event.target.classList.add('active');
-      lastActiveLink.current = event.target;
-
-      activeBox.current.style.top = event.target.offsetTop + 'px';
-      activeBox.current.style.left = event.target.offsetLeft + 'px';
-      activeBox.current.style.width = event.target.offsetWidth + 'px';
-      activeBox.current.style.height = event.target.offsetHeight + 'px';
+      setActiveLink(event.currentTarget);
+      closeNav();
   };
 
   const navItems = [
+      // Keep this in page order: the scroll spy activates the last link whose section has been reached
       { label: 'Home', link: '#home', className: 'nav-link active' },
-      { label: 'About', link: '#about', className: 'nav-link' },
       { label: 'Work', link: '#work', className: 'nav-link' },
-      //{ label: 'Reviews', link: '#reviews', className: 'nav-link' },
+      { label: 'About', link: '#about', className: 'nav-link' },
       { label: 'Contact', link: '#contact', className: 'nav-link md:hidden' }
   ];
 
   return (
-      <nav className={'navbar ' + (navOpen ? 'active' : '')}>
+      <nav aria-label="Primary" className={'navbar ' + (navOpen ? 'active' : '')}>
           {navItems.map(({ label, link, className }, key) => (
               <a
                   href={link}
@@ -68,6 +85,7 @@ const Navbar = ({ navOpen }) => {
 };
 
 Navbar.propTypes = {
-    navOpen: PropTypes.bool.isRequired
+    navOpen: PropTypes.bool.isRequired,
+    closeNav: PropTypes.func.isRequired
 }
 export default Navbar

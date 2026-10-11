@@ -1,77 +1,148 @@
-import React from 'react'
 
 /**
  * Node modules
  */
 import PropTypes from 'prop-types';
 
+/**
+ * Components
+ */
+import Icon from './Icon';
+
+const linkIcon = "[&>svg]:transition-transform hover:[&>svg]:translate-x-0.5 hover:[&>svg]:-translate-y-0.5 motion-reduce:[&>svg]:transition-none";
+
+/**
+ * One featured project: an oversized title that overlaps the top of its preview,
+ * a drifting outline numeral, and the copy beside it.
+ * `lead` gives the preview more room; `flip` mirrors the composition.
+ */
 const ProjectCard = ({
-    imgSrc,
+    id,
+    preview,
     title,
+    category,
+    desc,
+    features,
     tags,
     projectLink,
-    classes
+    demoLink,
+    index,
+    tone,
+    lead = false,
+    flip = false,
+    classes = ''
 }) => {
   return (
-    <div className={"relative p-4 rounded-2xl bg-zinc-800 hover:bg-zinc-700/50 active:bg-zinc-700/60 ring-1 ring-inset ring-zinc-50/5 transition-colors" + classes}>
+    <article
+        id={id}
+        data-journey-stop
+        style={{ '--tone': tone }}
+        className={"relative " + classes}
+    >
 
-        <figure className="img-box aspect-square rounded-lg mb-4">
-            <img 
-                src={imgSrc} 
-                alt={title}
-                loading='lazy'
-                className="img-cover" 
-            />
-        </figure>
+        <span
+            data-drift
+            aria-hidden="true"
+            className={"text-outline absolute -top-[0.3em] lg:-top-[0.55em] font-display font-bold text-[clamp(7rem,22vw,17rem)] leading-none pointer-events-none select-none " + (flip ? 'left-0' : 'right-0')}
+        >
+            {index}
+        </span>
 
-        <div className="flex items-center justify-between gap-4">
+        <h3 className={"project-title relative z-10 -mb-[0.2em] " + (flip ? 'lg:text-right' : '')}>
+            {title}
+        </h3>
 
-            <div>
-                <h3 className="title-1 mb-3">
-                    {title}
-                </h3>
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
 
-                <div className="flex flex-wrap items-center gap-2">
-                    {tags.map((label, key) => (
-                        <span 
+            <figure className={(lead ? 'lg:col-span-8 ' : 'lg:col-span-7 ') + (flip ? 'lg:order-last' : '')}>
+                <div className={"stage group " + (lead ? 'aspect-[16/11] sm:aspect-[16/10] lg:aspect-[5/4]' : 'aspect-[16/11]')}>
+                    {preview}
+                </div>
+            </figure>
+
+            <div className={(lead ? 'lg:col-span-4 ' : 'lg:col-span-5 ') + 'lg:pt-6'}>
+
+                <p className="eyebrow flex items-center gap-3">
+                    <span className="w-8 h-px bg-[var(--tone)]" aria-hidden="true"></span>
+
+                    {category}
+                </p>
+
+                <p className="mt-5 text-lg text-muted">
+                    {desc}
+                </p>
+
+                <ul className="mt-6 space-y-2.5 text-sm">
+                    {features.map((feature, key) => (
+                        <li
                             key={key}
-                            className="h-8 text-sm text-zinc-400 bg-zinc-50/5 grid items-center px-3 rounded-lg"
+                            className="flex gap-3"
                         >
-                            {label}
-                        </span>
+                            <span className="w-1.5 h-1.5 mt-[0.45rem] rounded-full bg-[var(--tone)] shrink-0" aria-hidden="true"></span>
+
+                            {feature}
+                        </li>
                     ))}
+                </ul>
+
+                <ul className="slashed mt-6 font-mono text-xs text-muted">
+                    {tags.map((label, key) => (
+                        <li key={key}>
+                            {label}
+                        </li>
+                    ))}
+                </ul>
+
+                <div className="flex flex-wrap items-center gap-3 mt-8">
+                    <a
+                        href={projectLink}
+                        target='_blank'
+                        rel="noopener noreferrer"
+                        className={"btn btn-outline " + linkIcon}
+                    >
+                        View on GitHub<span className="sr-only">: {title}</span>
+
+                        <Icon name="arrow_outward" />
+                    </a>
+
+                    {/* Only pass demoLink for a deployment that has been checked and works */}
+                    {demoLink &&
+                        <a
+                            href={demoLink}
+                            target='_blank'
+                            rel="noopener noreferrer"
+                            className={"btn btn-primary " + linkIcon}
+                        >
+                            Live demo<span className="sr-only">: {title}</span>
+
+                            <Icon name="arrow_outward" />
+                        </a>
+                    }
                 </div>
 
             </div>
 
-
-            <div className="w-11 h-11 rounded-lg grid place-items-center bg-sky-400 text-zinc-950 shrink-0">
-                <span 
-                    className="material-symbols-rounded"
-                    aria-hidden="true"
-                >
-                    arrow_outward
-                </span>
-            </div>
         </div>
 
-        <a 
-            href={projectLink} 
-            target='_blank'
-            className="absolute inset-0"
-        ></a>
-
-    </div>
+    </article>
   )
 }
 
 ProjectCard.propTypes = {
-    imgSrc: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    preview: PropTypes.node.isRequired,
     title: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    desc: PropTypes.string.isRequired,
+    features: PropTypes.array.isRequired,
     tags: PropTypes.array.isRequired,
-    projectLink: PropTypes.string,
-    classes: PropTypes.string,
-    download: PropTypes.bool
+    projectLink: PropTypes.string.isRequired,
+    demoLink: PropTypes.string,
+    index: PropTypes.string.isRequired,
+    tone: PropTypes.string.isRequired,
+    lead: PropTypes.bool,
+    flip: PropTypes.bool,
+    classes: PropTypes.string
 }
 
 export default ProjectCard
