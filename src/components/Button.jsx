@@ -1,5 +1,5 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import Icon from './Icon'
 
 /**
  * Primary Button
@@ -19,24 +19,20 @@ const ButtonPrimary = ({
                 target={target}
                 rel="noopener noreferrer"
                 download={download ? '' : undefined}
-                className={"btn btn-primary z-10 relative pointer-events-auto " + classes} // ✅ Updated class
+                className={"btn btn-primary " + classes} // ✅ Updated class
             >
                 {label}
                 {icon &&
-                    <span className="material-symbols-rounded" aria-hidden="true">
-                        {icon}
-                    </span>
+                    <Icon name={icon} />
                 }
             </a>
         )
     } else {
         return (
-            <button className={"btn btn-primary z-10 relative pointer-events-auto " + classes}>
+            <button className={"btn btn-primary " + classes}>
                 {label}
                 {icon &&
-                    <span className="material-symbols-rounded" aria-hidden="true">
-                        {icon}
-                    </span>
+                    <Icon name={icon} />
                 }
             </button>
         )
@@ -71,24 +67,20 @@ const ButtonOutline = ({
                 target={target}
                 rel="noopener noreferrer"
                 download={download ? '' : undefined}
-                className={"btn btn-outline z-10 relative pointer-events-auto " + classes}
+                className={"btn btn-outline " + classes}
             >
                 {label}
                 {icon &&
-                    <span className="material-symbols-rounded" aria-hidden="true">
-                        {icon}
-                    </span>
+                    <Icon name={icon} />
                 }
             </a>
         )
     } else {
         return (
-            <button className={"btn btn-outline z-10 relative pointer-events-auto " + classes}>
+            <button className={"btn btn-outline " + classes}>
                 {label}
                 {icon &&
-                    <span className="material-symbols-rounded" aria-hidden="true">
-                        {icon}
-                    </span>
+                    <Icon name={icon} />
                 }
             </button>
         )

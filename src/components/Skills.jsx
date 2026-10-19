@@ -1,105 +1,71 @@
-import React from 'react'
 
 
-/**
- * Components
- */
-import SkillCard from './SkillCard';
+// Every entry is either on the résumé, used in a featured project, or added at the owner's request
+import ChapterMark from './ChapterMark';
 
-
-const skillItem = [
+const skillGroups = [
     {
-      imgSrc: "/Manideep - Portfolio Images/images/python-original.svg",
-      label: 'Python',
-      desc: 'Programming Language'
+      label: 'AI & Agentic Systems',
+      items: ['LLM Applications', 'RAG Pipelines', 'LangChain', 'LangGraph', 'NLP', 'Prompt Engineering', 'Guardrails', 'Observability']
     },
     {
-      imgSrc: "/Manideep - Portfolio Images/images/ai-dl.svg",
-      label: 'Deep learning',
-      desc: 'AI Technique'
+      label: 'Machine Learning & Deep Learning',
+      items: ['Python', 'TensorFlow', 'Keras', 'scikit-learn', 'Machine Learning', 'Deep Learning', 'CNNs', 'LSTMs & RNNs', 'Transformers', 'Fine-tuning', 'Model Evaluation', 'MLOps']
     },
     {
-      imgSrc: "/Manideep - Portfolio Images/images/figma.svg",
-      label: 'Figma',
-      desc: 'Design tool'
+      label: 'Backend & Systems',
+      items: ['FastAPI', 'Node.js', 'REST APIs', 'Redis', 'MySQL', 'MongoDB', 'Supabase', 'C & C++']
     },
     {
-      imgSrc: "/Manideep - Portfolio Images/images/html5-original.svg",
-      label: 'HTML',
-      desc: 'Markup Language'
+      label: 'Frontend & Product Engineering',
+      items: ['React', 'JavaScript', 'HTML', 'CSS', 'Figma', 'UX Design']
     },
     {
-      imgSrc: "/Manideep - Portfolio Images/images/css3.svg",
-      label: 'CSS',
-      desc: 'User Interface'
-    },
-    {
-      imgSrc: "/Manideep - Portfolio Images/images/javascript.svg",
-      label: 'JavaScript',
-      desc: 'Interaction'
-    },
-    {
-      imgSrc: "/Manideep - Portfolio Images/images/nodejs.svg",
-      label: 'NodeJS',
-      desc: 'Web Server'
-    },
-    {
-      imgSrc: "/Manideep - Portfolio Images/images/mysql-original.svg",
-      label: 'MySQL',
-      desc: 'Database'
-    },
-    {
-      imgSrc: "/Manideep - Portfolio Images/images/mongodb.svg",
-      label: 'MongoDB',
-      desc: 'Database'
-    },
-    {
-      imgSrc: "/Manideep - Portfolio Images/images/react.svg",
-      label: 'React',
-      desc: 'Framework'
-    },
-    {
-      imgSrc: "/Manideep - Portfolio Images/images/data-analytics.svg",
-      label: 'Data Analytics',
-      desc: 'Analytical Process'
-    },
-    {
-      imgSrc: "/Manideep - Portfolio Images/images/jupyter-original-wordmark.svg",
-      label: 'Jupyter',
-      desc: 'Tool'
-    },
-    {
-      imgSrc: "/Manideep - Portfolio Images/images/keras-original.svg",
-      label: 'Keras',
-      desc: 'Fraamework'
-    },
-    
+      label: 'Tools & Deployment',
+      items: ['Git', 'GitHub', 'AWS', 'Vercel', 'Render', 'Streamlit', 'Jupyter', 'Data Analytics']
+    }
 ];
 
 
 const Skills = () => {
   return (
-    <section className="section">
+    <section
+        id="skills"
+        className="pt-24 lg:pt-36"
+    >
         <div className="container">
 
-            <h2 className="headline-2 reveal-up">
-                Essential Tools I use
-            </h2>
+            <ChapterMark number="02" title="Learning to Think" />
 
-            <p className="text-zinc-400 mt-3 mb-8 max-w-[50ch] reveal-up">
-                Discover the powerful tools and technologies I use to create exceptional, high-performing websites & applications.
-            </p>
+            <div className="reveal">
+                <p className="eyebrow">Skills</p>
 
-            <div className="grid gap-3 grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))]">
+                <h2 className="headline-2 mt-5">
+                    Technical directory
+                </h2>
+            </div>
+
+            <div className="mt-12 border-b border-line">
                 {
-                    skillItem.map(({ imgSrc, label, desc }, key) => (
-                        <SkillCard 
+                    skillGroups.map(({ label, items }, key) => (
+                        <div
                             key={key}
-                            imgSrc={imgSrc}
-                            label={label}
-                            desc={desc}
-                            classes="reveal-up"
-                        />
+                            style={{ '--step': key }}
+                            data-journey-stop
+                            className="group grid gap-3 py-6 border-t border-line md:grid-cols-12 md:gap-6 md:py-7 lg:ml-[calc(var(--step)*2.5%)] reveal"
+                        >
+                            <h3 className="flex gap-3 font-mono text-xs uppercase tracking-[0.2em] md:col-span-3 md:pt-1.5">
+                                <span className="text-accent" aria-hidden="true">{'0' + (key + 1)}</span>
+
+                                {label}
+                            </h3>
+
+                            <ul className="slashed text-lg font-medium text-slate-300 transition-colors duration-300 group-hover:text-foreground md:col-span-9 md:text-xl">
+                                {items.map((item, key) => (
+                                    <li key={key}>{item}</li>
+                                ))}
+                            </ul>
+                        </div>
                     ))
                 }
             </div>

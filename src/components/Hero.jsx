@@ -1,74 +1,151 @@
-import React from 'react'
 
+
+/**
+ * Node modules
+ */
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 /**
  * Components
  */
 import { ButtonPrimary, ButtonOutline } from './Button';
+import AgentGraph from './AgentGraph';
+import Icon from './Icon';
+import ChapterMark from './ChapterMark';
+
+// Public link to the current CV, set per environment via VITE_CV_URL.
+// Supabase serves the file as an attachment when given ?download=<name>; plain download attr is ignored cross-origin.
+// Public (non-secret) URL; the default keeps the button working when VITE_CV_URL is unset, e.g. on Vercel previews.
+const cvBase = import.meta.env.VITE_CV_URL || 'https://dofdbaxcnireedbxnvkd.supabase.co/storage/v1/object/public/portfolio-files/cv/latest.pdf';
+const cvUrl = `${cvBase}?download=Manideep_D_Resume.pdf`;
+
+const headline = [
+    { text: 'Engineering ' },
+    { text: 'Intelligence. ' },
+    { text: 'Building ' },
+    { text: 'Autonomous ', accent: true },
+    { text: 'Systems.', accent: true }
+];
+
+const focusAreas = [
+    'Agentic AI engineering',
+    'LLM applications and RAG systems',
+    'AI-powered product development',
+    'Backend and full-stack engineering',
+    'Intelligent workflow automation'
+];
 
 const Hero = () => {
+  const root = useRef(null);
+
+  useGSAP(() => {
+    // Entrance only; the hero is fully visible without it
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from('.hero-line', { yPercent: 110, duration: 1, ease: 'power4.out', stagger: 0.09 });
+      gsap.from('.hero-fade', { opacity: 0, y: 16, duration: 0.8, ease: 'power2.out', stagger: 0.08, delay: 0.5 });
+      gsap.from('.graph-line', { opacity: 0, duration: 1, ease: 'power1.out', delay: 0.5 });
+      gsap.from('.graph-node', { opacity: 0, scale: 0.6, transformOrigin: '50% 50%', duration: 0.6, ease: 'back.out(1.6)', stagger: 0.08, delay: 0.7 });
+    });
+  }, { scope: root });
+
   return (
-    <section 
-        id="home" 
-        className="pt-28 lg:pt-36"
+    <section
+        id="home"
+        ref={root}
+        className="relative isolate pt-32 pb-8 overflow-hidden lg:min-h-[100svh] lg:flex lg:flex-col lg:justify-end"
     >
-        <div className="container items-center lg:grid lg:grid-cols-2 lg:gap-10">
 
-            <div>
-                <div className="flex items-center gap-3">
-                    <figure className="img-box w-9 h-9 rounded-lg">
-                        <img 
-                            src="/Manideep - Portfolio Images/images/Maniimgh.png"
-                            width={40}
-                            height={40}
-                            alt="Manideep Portrait"
-                            className="img-cover"
-                        />
-                    </figure>
+        <div className="container">
 
-                    <div className="flex items-center gap-1.5 text-zinc-400 text-sm tracking-wide">
-                        <span className="realtive w-2 h-2 rounded-full bg-emerald-400">
-                            <span className="absolute inset-0 rounded-full "></span> 
+            <ChapterMark number="01" title="The Beginning" classes="hero-fade mb-6" />
+
+            <div className="hero-fade flex flex-wrap items-center gap-x-6 gap-y-2">
+                {/* Shown here beside the status; the h1 below carries the name for assistive tech */}
+                <p className="font-display text-2xl font-bold md:text-3xl" aria-hidden="true">Manideep D.</p>
+
+                <p className="eyebrow flex items-center gap-2.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
+
+                    Available for work
+                </p>
+            </div>
+
+            <h1 className="mt-6">
+                <span className="sr-only">Manideep D. </span>
+
+                <span className="display block">
+                    {headline.map(({ text, accent }, key) => (
+                        <span
+                            key={key}
+                            className="block py-[0.03em] overflow-hidden"
+                        >
+                            <span className={'hero-line block ' + (accent ? 'text-accent' : '')}>{text}</span>
                         </span>
+                    ))}
+                </span>
+            </h1>
 
-                        Available for Work
-                    </div>
-                    
-                </div>
+            <div className="hero-fade mt-8 lg:mt-10">
+                <p className="max-w-[46ch] text-lg text-muted md:text-xl">
+                    I build AI-powered applications, agentic workflows, and reliable software systems that turn complex problems into practical products.
+                </p>
 
-                <h2 className="headline-1 max-w-[15ch] sm:max-w-[20ch] lg:max-w-[15ch] mt-5 mb-8 lg:mb-10">
-                    Creating Innovative AI Solutions and Modern Web Applications for Tomorrow's Challenges
-                </h2>
-
-                <div className="flex items-center gap-3">
-                    <ButtonPrimary 
-                        label="Download CV"
-                        icon=""
-                        href= "/resumes/Mani_Resume_New_1.pdf"
-                        download = {true}
-                        target = "_blank"
+                <div className="flex flex-wrap items-center gap-3 mt-8">
+                    <ButtonPrimary
+                        href="#work"
+                        label="View selected work"
+                        icon="arrow_downward"
                     />
 
-                    <ButtonOutline 
-                        href="#about"
-                        label="Scroll down"
-                        icon=""
-
+                    <ButtonOutline
+                        href="#contact"
+                        label="Let's collaborate"
+                        icon="arrow_forward"
                     />
+
+                    <a
+                        href={cvUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="eyebrow flex items-center gap-2 h-12 px-3 transition-colors hover:text-accent"
+                    >
+                        Download CV
+
+                        <Icon name="download" />
+                    </a>
                 </div>
             </div>
 
-            <div className="hidden lg:block">
-                <figure className="w-full max-w-[480px] ml-auto bg-gradient-to-t from-sky-400 via-25% via-sky-400/40 to-65% rounded-[60px] overflow-hidden">
-                    <img
-                        src="/Manideep - Portfolio Images/images/maniimgf.png"
-                        width={656}
-                        height={800}
-                        alt="Manideep" 
-                        className="w-full"
-                    />
-                </figure>
+            <AgentGraph />
+
+            <div className="hero-fade mt-12 pt-5 border-t border-line lg:mt-16">
+                <p className="eyebrow">Focus areas</p>
+
+                <ol className="grid gap-x-6 gap-y-3 mt-4 sm:grid-cols-2 lg:grid-cols-5">
+                    {focusAreas.map((area, key) => (
+                        <li
+                            key={key}
+                            className="flex gap-3 text-sm"
+                        >
+                            <span className="font-mono text-xs text-accent" aria-hidden="true">{'0' + (key + 1)}</span>
+
+                            {area}
+                        </li>
+                    ))}
+                </ol>
             </div>
+
+            <a
+                href="#skills"
+                className="hero-fade eyebrow inline-flex items-center gap-3 mt-10 transition-colors hover:text-accent"
+            >
+                Begin the journey
+
+                <Icon name="arrow_downward" />
+            </a>
+
         </div>
 
     </section>
