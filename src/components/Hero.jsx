@@ -15,8 +15,9 @@ import AgentGraph from './AgentGraph';
 import Icon from './Icon';
 import ChapterMark from './ChapterMark';
 
-// Public link to the current CV, set per environment. Falls back to the copy shipped with the site.
-const cvUrl = import.meta.env.VITE_CV_URL || '/resumes/Mani_Resume_New_1.pdf';
+// Public link to the current CV, set per environment via VITE_CV_URL.
+// Supabase serves the file as an attachment when given ?download=<name>; plain download attr is ignored cross-origin.
+const cvUrl = import.meta.env.VITE_CV_URL && `${import.meta.env.VITE_CV_URL}?download=Manideep_D_Resume.pdf`;
 
 const headline = [
     { text: 'Engineering ' },
@@ -104,7 +105,6 @@ const Hero = () => {
 
                     <a
                         href={cvUrl}
-                        download=""
                         target="_blank"
                         rel="noopener noreferrer"
                         className="eyebrow flex items-center gap-2 h-12 px-3 transition-colors hover:text-accent"
