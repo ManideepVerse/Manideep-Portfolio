@@ -17,7 +17,9 @@ import ChapterMark from './ChapterMark';
 
 // Public link to the current CV, set per environment via VITE_CV_URL.
 // Supabase serves the file as an attachment when given ?download=<name>; plain download attr is ignored cross-origin.
-const cvUrl = import.meta.env.VITE_CV_URL && `${import.meta.env.VITE_CV_URL}?download=Manideep_D_Resume.pdf`;
+// Public (non-secret) URL; the default keeps the button working when VITE_CV_URL is unset, e.g. on Vercel previews.
+const cvBase = import.meta.env.VITE_CV_URL || 'https://dofdbaxcnireedbxnvkd.supabase.co/storage/v1/object/public/portfolio-files/cv/latest.pdf';
+const cvUrl = `${cvBase}?download=Manideep_D_Resume.pdf`;
 
 const headline = [
     { text: 'Engineering ' },
